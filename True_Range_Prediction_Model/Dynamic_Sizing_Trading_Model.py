@@ -34,6 +34,7 @@ def test_strategy(df, capital=CAPITAL, leverage=LEVERAGE):
     plt.plot(df['Benchmark Returns'])
     plt.plot(df['Strategy Returns'])
     plt.legend(['Benchmark Returns', 'Strategy Returns'])
+    plt.ylabel('Growth of $10,000')
     plt.title('SPY vs. Dynamic Sizing Portfolio')
     plt.show()
 
