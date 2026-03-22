@@ -1,2 +1,6 @@
 __pycache__/
 *.pyc
+.idea/
+Data_Cleaner_3.py
+Market_Open_Prediction_Model_2/
+Data_Cleaner.py
