@@ -13,6 +13,7 @@ ERROR = (0.01, 0.02, 0.03, 0.04, 0.05, 1.95, 1.96, 1.97, 1.98, 1.99)
 def get_data(ticker=TICKER, interval=INTERVAL):
     df = yf.download(tickers=ticker, interval=interval, period='max')
     df.columns = df.columns.get_level_values(0)
+
     return df
 
 def infuse_error(df, error=ERROR):
@@ -25,6 +26,7 @@ def infuse_error(df, error=ERROR):
     random_indices = np.random.choice(df_rest.index, 50)
     df_rest.loc[random_indices, 'Close'] = df_rest.loc[random_indices, 'Close'] * np.random.choice(error)
     df_dirty_data = pd.concat([df_start, df_rest])
+
     return df.dropna(), df_dirty_data.dropna()
 
 def cleaning_data(df_dirty_data, z_threshold=Z_THRESHOLD):
@@ -35,6 +37,7 @@ def cleaning_data(df_dirty_data, z_threshold=Z_THRESHOLD):
     zscore = (df_dirty_data['Price Change'] - mu) / sigma
     df_dirty_data['Error'] = np.where(zscore.abs() > z_threshold, 1, 0)
     df_clean_data = df_dirty_data[df_dirty_data['Error'] == 0].copy()
+
     return df_dirty_data.dropna(), df_clean_data
 
 def evaluate_model_performance(df, df_clean_data, df_dirty_data):
@@ -66,6 +69,7 @@ def evaluate_model_performance(df, df_clean_data, df_dirty_data):
     error_dirty = abs((org_vwap - dirty_vwap) / org_vwap) * 100
     error_clean = abs((org_vwap - clean_vwap) / org_vwap) * 100
     improvement = error_dirty - error_clean
+
     return df, df_clean_data, df_dirty_data, error_clean, error_dirty, improvement
 
 def main(n_iterations=ITERATIONS):
@@ -77,7 +81,7 @@ def main(n_iterations=ITERATIONS):
         'improvements': []
     }
 
-    for n in tqdm(range(n_iterations), desc='Simulations', unit='simulations'):
+    for n in tqdm(range(n_iterations), desc='Progress', unit='simulations'):
         df, df_dirty_data = infuse_error(df.copy())
         df_dirty_data, df_clean_data = cleaning_data(df_dirty_data)
         df, df_clean_data, df_dirty_data, error_clean, error_dirty, improvement = evaluate_model_performance(df, df_clean_data, df_dirty_data)
@@ -96,6 +100,7 @@ def main(n_iterations=ITERATIONS):
     print(f'Average Improvement:      {avg_improvement:.4f} percentage points recovered')
     print(f'Worst Case Improvement:   {np.min(results["improvements"]):.4f}%')
     print(f'Best Case Improvement:    {np.max(results["improvements"]):.4f}%')
+
     return df, df_clean_data, df_dirty_data
 
 main()
