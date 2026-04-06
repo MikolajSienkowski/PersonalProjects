@@ -1,6 +1,7 @@
 import yfinance as yf
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
 INTERVAL = '1m'
 TICKER = 'TSLA'
@@ -76,17 +77,14 @@ def main(n_iterations=ITERATIONS):
         'improvements': []
     }
 
-    print(f'Running {n_iterations} iterations...')
-
-    for n in range(n_iterations):
+    for n in tqdm(range(n_iterations), desc='Simulations', unit='simulations'):
         df, df_dirty_data = infuse_error(df.copy())
         df_dirty_data, df_clean_data = cleaning_data(df_dirty_data)
         df, df_clean_data, df_dirty_data, error_clean, error_dirty, improvement = evaluate_model_performance(df, df_clean_data, df_dirty_data)
         results['dirty_errors'].append(error_dirty)
         results['clean_errors'].append(error_clean)
         results['improvements'].append(improvement)
-        if (n + 1) % 100 == 0:
-            print(f"Completed {n + 1}/{n_iterations} runs...")
+
 
     avg_dirty_error = np.mean(results['dirty_errors'])
     avg_clean_error = np.mean(results['clean_errors'])
