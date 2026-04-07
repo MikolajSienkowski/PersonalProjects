@@ -24,7 +24,7 @@ The model identified a highly significant linear relationship, proving that week
 
 *Conclusion:* In the modern post-ETF market environment where institutional capital bridges crypto and traditional equities, weekend BTC momentum is a viable predictive signal for SPY Monday open trajectories.
 
-# Implementing the model into a trading strategy
+# Implementing the Model into a Trading Strategy
 
 ## The Logic
 * Assume that a Monday Open Gap dictates the trend for the upcoming week.
