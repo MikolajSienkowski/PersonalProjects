@@ -24,6 +24,7 @@ def add_feature_and_target(df, btc):
     df['Target'] = (df['Open'].shift(-1) - df['Close']) / df['Close']
     btc['Feature'] = (btc['Close'].shift(-2) - btc['Close']) / btc['Close']
 
+    df_org = df.copy()
     df = df[df.index.dayofweek == 4].copy()
     btc = btc[btc.index.dayofweek == 4].copy()
 
@@ -31,7 +32,7 @@ def add_feature_and_target(df, btc):
 
     df = pd.concat([df, btc[['Feature']]], axis=1).dropna()
 
-    return df
+    return df, df_org
 
 def test_hypothesis(df):
     y = df['Target']
@@ -68,17 +69,16 @@ def train_and_test_model(X, y, y_guess):
     print('*guessing is described as assuming that the gap on Monday open')
     print('would be the size of an average gap from the period')
 
-    return
+    return next_prediction
 
 def main():
     df, btc = get_data()
-    df = add_feature_and_target(df, btc)
+    df, df_org = add_feature_and_target(df, btc)
     X, y, y_guess = test_hypothesis(df)
-    train_and_test_model(X, y, y_guess)
+    next_prediction = train_and_test_model(X, y, y_guess)
 
-    return
+    return next_prediction, df_org
 
 if __name__ == '__main__':
-    main()
+    next_prediction, df_org = main()
 
-# gap theory

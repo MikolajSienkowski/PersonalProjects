@@ -24,6 +24,24 @@ The model identified a highly significant linear relationship, proving that week
 
 *Conclusion:* In the modern post-ETF market environment where institutional capital bridges crypto and traditional equities, weekend BTC momentum is a viable predictive signal for SPY Monday open trajectories.
 
+# Implementing the model into a trading strategy
+
+## The Logic
+* Assume that a Monday Open Gap dictates the trend for the upcoming week.
+* Use the Model's predictions to define our weekly position.
+* A  predicted gap larger than 0.25% triggers a long position, a gap smaller than -0.25% triggers a short position, and every prediction within that threshold results in no market exposure (staying in cash).
+
+## The Out-Of-Sample Results (26 weeks)
+| Metric               | Gap Trading (Model) | Buy & Hold SPY (Benchmark) |
+|:---------------------|:--------------------|:---------------------------|
+| **Total Returns**    | **5.77%**           | 6.24%                      |
+| **Max Drawdown**     | **-3.88%**          | -5.07%                     |
+| **Win Rate**         | **60%**             | 50%                        |
+| **Number of Trades** | **10**              | 26                         |
+| **Expected Value**   | **0.64%**           | -0.08%                     |
+
+*Conclusion:* Although the backtest is conducted over a short period of time, the strategy captures roughly 92% of returns while cutting down on the Max Drawdown by roughly 23%. By remaining out of the market 62% of the time, the strategy acts as a highly selective momentum engine with a proven 60% win rate and a strictly positive Expected Value per trade.
+
 ## Tech Stack
 * **Python** (pandas, numpy)
 * **statsmodels** (for linear regression and statistical inference)
@@ -34,3 +52,4 @@ The model identified a highly significant linear relationship, proving that week
 1. Clone the repository.
 2. Install the required packages: `pip install pandas numpy statsmodels yfinance scikit-learn`
 3. Run the model: `python Monday_Open_Prediction_Model.py`
+4. Run the strategy: `python Gap_Theory_Trading.py`
